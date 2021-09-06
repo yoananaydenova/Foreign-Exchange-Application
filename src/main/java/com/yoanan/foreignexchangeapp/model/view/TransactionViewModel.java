@@ -1,4 +1,4 @@
-package com.yoanan.foreignexchangeapp.ui.model.view;
+package com.yoanan.foreignexchangeapp.model.view;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonView;
@@ -11,7 +11,8 @@ public class TransactionViewModel {
     @JsonView(Views.TransactionView.class)
     private String id;
 
-    private LocalDate date;
+   // private LocalDate date;
+    private String date;
 
     @JsonProperty("source_currency")
     private String sourceCurrency;
@@ -34,7 +35,10 @@ public class TransactionViewModel {
     public TransactionViewModel() {
     }
 
-    public TransactionViewModel(String id, LocalDate date, String sourceCurrency, String targetCurrency, Double exchangeRate, BigDecimal sourceAmount, BigDecimal targetAmount) {
+
+
+
+    public TransactionViewModel(String id, String date, String sourceCurrency, String targetCurrency, Double exchangeRate, BigDecimal sourceAmount, BigDecimal targetAmount) {
         this.id = id;
         this.date = date;
         this.sourceCurrency = sourceCurrency;
@@ -53,11 +57,11 @@ public class TransactionViewModel {
         return this;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public TransactionViewModel setDate(LocalDate date) {
+    public TransactionViewModel setDate(String date) {
         this.date = date;
         return this;
     }

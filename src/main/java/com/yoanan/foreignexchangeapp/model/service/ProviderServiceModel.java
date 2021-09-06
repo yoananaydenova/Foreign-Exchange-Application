@@ -1,4 +1,4 @@
-package com.yoanan.foreignexchangeapp.ui.model.service;
+package com.yoanan.foreignexchangeapp.model.service;
 
 import java.time.LocalDate;
 

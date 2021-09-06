@@ -6,8 +6,8 @@ import capital.scalable.restdocs.jackson.JacksonResultHandlers;
 import capital.scalable.restdocs.response.ResponseModifyingPreprocessors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yoanan.foreignexchangeapp.service.TransactionService;
-import com.yoanan.foreignexchangeapp.ui.model.service.ProviderServiceModel;
-import com.yoanan.foreignexchangeapp.ui.model.view.TransactionViewModel;
+import com.yoanan.foreignexchangeapp.model.service.ProviderServiceModel;
+import com.yoanan.foreignexchangeapp.model.view.TransactionViewModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,8 +28,6 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -103,8 +101,7 @@ class ForeignExchangeAppApplicationTests {
     }
 
     @Test
-    public void testGetExchangeRate() throws Exception {
-
+    public void whenResourcesAreRetrievedCorrect_then200IsReceivedWithCorrectExchangeRate() throws Exception {
         ProviderServiceModel providerServiceModel = new ProviderServiceModel(LocalDate.now(), "EUR", "BGN", 1.956671);
         when(transactionServiceMock.getExchangeRate("BGN", "EUR")).thenReturn(providerServiceModel);
 
@@ -113,7 +110,43 @@ class ForeignExchangeAppApplicationTests {
                         .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.exchange_rate").value(1.956671));
-
     }
+
+//    @Test
+//    public void whenSourceCurrencyIsNotRetrieved_then200IsReceivedWithCorrectExchangeRate() throws Exception {
+//
+//        ProviderServiceModel providerServiceModel = new ProviderServiceModel(LocalDate.now(), "EUR", "BGN", 1.956671);
+//        when(transactionServiceMock.getExchangeRate("BGN", "EUR")).thenReturn(providerServiceModel);
+//
+//        mockMvc
+//                .perform(get("http://localhost:8080/api/exchange?base=EUR&quote=BGN")
+//                        .contentType("application/json"))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.exchange_rate").value(1.956671));
+//
+//    }
+
+
+
+//    @Test
+//    public void whenResourcesAreRetrievedPaged_then200IsReceived(){
+//        Response response = RestAssured.get(paths.getFooURL() + "?page=0&size=2");
+//
+//        assertThat(response.getStatusCode(), is(200));
+//    }
+//    @Test
+//    public void whenPageOfResourcesAreRetrievedOutOfBounds_then404IsReceived(){
+//        String url = getFooURL() + "?page=" + randomNumeric(5) + "&size=2";
+//        Response response = RestAssured.get.get(url);
+//
+//        assertThat(response.getStatusCode(), is(404));
+//    }
+//    @Test
+//    public void givenResourcesExist_whenFirstPageIsRetrieved_thenPageContainsResources(){
+//        createResource();
+//        Response response = RestAssured.get(paths.getFooURL() + "?page=0&size=2");
+//
+//        assertFalse(response.body().as(List.class).isEmpty());
+//    }
 
 }

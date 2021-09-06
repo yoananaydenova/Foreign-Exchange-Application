@@ -1,14 +1,15 @@
-package com.yoanan.foreignexchangeapp.ui.model.binding;
+package com.yoanan.foreignexchangeapp.model.binding;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 public class TransactionBindingModel {
 
-    private String id;
-    private LocalDate date;
+
     @JsonProperty("source_amount")
     private BigDecimal sourceAmount;
     @JsonProperty("source_currency")
@@ -19,24 +20,8 @@ public class TransactionBindingModel {
     public TransactionBindingModel() {
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public TransactionBindingModel setId(String id) {
-        this.id = id;
-        return this;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public TransactionBindingModel setDate(LocalDate date) {
-        this.date = date;
-        return this;
-    }
-
+    @NotNull(message = "Source amount must be present!")
+    @DecimalMin(value = "0", message = "Source amount must be greater than 0!")
     public BigDecimal getSourceAmount() {
         return sourceAmount;
     }
@@ -46,6 +31,8 @@ public class TransactionBindingModel {
         return this;
     }
 
+    @NotNull(message = "Source currency must be present!")
+    @Length(min = 3, max = 3, message = "The length of the source currency must be 3 symbols!")
     public String getSourceCurrency() {
         return sourceCurrency;
     }
@@ -55,6 +42,8 @@ public class TransactionBindingModel {
         return this;
     }
 
+    @NotNull(message = "Target currency must be present!")
+    @Length(min = 3, max = 3, message = "The length of the source currency must be 3 symbols!")
     public String getTargetCurrency() {
         return targetCurrency;
     }

@@ -1,4 +1,4 @@
-package com.yoanan.foreignexchangeapp.ui.model.view;
+package com.yoanan.foreignexchangeapp.model.view;
 
 public class Views {
 

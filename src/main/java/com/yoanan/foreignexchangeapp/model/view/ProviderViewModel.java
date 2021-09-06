@@ -1,4 +1,4 @@
-package com.yoanan.foreignexchangeapp.ui.model.view;
+package com.yoanan.foreignexchangeapp.model.view;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

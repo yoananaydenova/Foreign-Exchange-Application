@@ -1,4 +1,4 @@
-package com.yoanan.foreignexchangeapp.ui.model.entity;
+package com.yoanan.foreignexchangeapp.model.entity;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -45,7 +45,7 @@ public class TransactionEntity {
         return this;
     }
 
-    @Column(name="date")
+    @Column(name="date", columnDefinition = "DATE",nullable = false)
     public LocalDate getDate() {
         return date;
     }
@@ -55,7 +55,7 @@ public class TransactionEntity {
         return this;
     }
 
-    @Column(name="source_currency")
+    @Column(name="source_currency", nullable = false)
     public String getSourceCurrency() {
         return sourceCurrency;
     }
@@ -65,7 +65,7 @@ public class TransactionEntity {
         return this;
     }
 
-    @Column(name="target_currency")
+    @Column(name="target_currency", nullable = false)
     public String getTargetCurrency() {
         return targetCurrency;
     }
@@ -75,7 +75,7 @@ public class TransactionEntity {
         return this;
     }
 
-    @Column(name="exchange_rate")
+    @Column(name="exchange_rate", nullable = false)
     public Double getExchangeRate() {
         return exchangeRate;
     }
@@ -85,7 +85,7 @@ public class TransactionEntity {
         return this;
     }
 
-    @Column(name="source_amount")
+    @Column(name="source_amount", nullable = false)
     public BigDecimal getSourceAmount() {
         return sourceAmount;
     }
@@ -95,7 +95,7 @@ public class TransactionEntity {
         return this;
     }
 
-    @Column(name="target_amount")
+    @Column(name="target_amount", nullable = false)
     public BigDecimal getTargetAmount() {
         return targetAmount;
     }
