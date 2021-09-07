@@ -2,8 +2,7 @@ package com.yoanan.foreignexchangeapp.model.binding;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.validation.constraints.AssertTrue;
-import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -17,14 +16,14 @@ public class ProviderBindingModel {
     @JsonProperty("base")
     private String baseCurrency;
     private LocalDate date;
-    private Map<String, Double> rates = new HashMap<>();
+    private Map<String, BigDecimal> rates = new HashMap<>();
 
     private Map<String, String> error = new HashMap<>();
 
     public ProviderBindingModel() {
     }
 
-    public ProviderBindingModel(boolean state, Timestamp timestamp, String baseCurrency, LocalDate date, Map<String, Double> rates, Map<String, String> error) {
+    public ProviderBindingModel(boolean state, Timestamp timestamp, String baseCurrency, LocalDate date, Map<String, BigDecimal> rates, Map<String, String> error) {
         this.state = state;
         this.timestamp = timestamp;
         this.baseCurrency = baseCurrency;
@@ -69,11 +68,11 @@ public class ProviderBindingModel {
         return this;
     }
 
-    public Map<String, Double> getRates() {
+    public Map<String, BigDecimal> getRates() {
         return rates;
     }
 
-    public ProviderBindingModel setRates(Map<String, Double> rates) {
+    public ProviderBindingModel setRates(Map<String, BigDecimal> rates) {
         this.rates = rates;
         return this;
     }

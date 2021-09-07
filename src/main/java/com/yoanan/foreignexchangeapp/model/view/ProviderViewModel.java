@@ -2,23 +2,25 @@ package com.yoanan.foreignexchangeapp.model.view;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.math.BigDecimal;
+
 public class ProviderViewModel {
 
     @JsonProperty("exchange_rate")
-    private Double exchangeRate;
+    private BigDecimal exchangeRate;
 
     public ProviderViewModel() {
     }
 
-    public ProviderViewModel(Double exchangeRate) {
+    public ProviderViewModel(BigDecimal exchangeRate) {
         this.exchangeRate = exchangeRate;
     }
 
-    public Double getExchangeRate() {
+    public BigDecimal getExchangeRate() {
         return exchangeRate;
     }
 
-    public ProviderViewModel setExchangeRate(Double exchangeRate) {
+    public ProviderViewModel setExchangeRate(BigDecimal exchangeRate) {
         this.exchangeRate = exchangeRate;
         return this;
     }

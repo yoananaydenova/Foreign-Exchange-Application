@@ -9,13 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,19 +22,18 @@ import java.util.stream.Collectors;
 public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
 
+    // handle validation errors
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers,
             HttpStatus status, WebRequest request) {
-        System.out.println();
-        Map<String, List<String>> body = new HashMap<>();
-
         List<String> errors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .collect(Collectors.toList());
 
-        body.put("errors", errors);
+        Map<String, String> body = new HashMap<>();
+        body.put("error", String.join(" ", errors));
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
@@ -47,8 +43,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handler(Exception ex, WebRequest request) {
         String errorMessageDescription = ex.getLocalizedMessage();
-
-        if(errorMessageDescription==null){
+        if (errorMessageDescription == null) {
             errorMessageDescription = ex.toString();
         }
         ErrorMessage errorMessage = new ErrorMessage(errorMessageDescription);
@@ -57,11 +52,11 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
 
     @ExceptionHandler(value = {Exception.class})
-    public ResponseEntity<Object> handleAnyException(Exception ex, WebRequest request){
-        System.out.println();
+    public ResponseEntity<Object> handleAnyException(Exception ex, WebRequest request) {
+
         String errorMessageDescription = ex.getLocalizedMessage();
 
-        if(errorMessageDescription==null){
+        if (errorMessageDescription == null) {
             errorMessageDescription = ex.toString();
         }
         ErrorMessage errorMessage = new ErrorMessage(errorMessageDescription);
@@ -71,16 +66,33 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     }
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
-    public ResponseEntity<Object> handleSpecificExceptions(Exception ex, WebRequest request){
+    public ResponseEntity<Object> handleSpecificExceptions(Exception ex, WebRequest request) {
 
         String errorMessageDescription = ex.getLocalizedMessage();
-        if(errorMessageDescription==null){
+        if (errorMessageDescription == null) {
             errorMessageDescription = ex.toString();
         }
-        System.out.println();
+
         ErrorMessage errorMessage = new ErrorMessage(errorMessageDescription);
 
         return new ResponseEntity<>(
                 errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolationException(ConstraintViolationException e) {
+
+        List<String> errors = e.getConstraintViolations()
+                .stream()
+                .map(m -> {
+                    String message = m.getMessage();
+                    return message.substring(0, 1).toUpperCase() + message.substring(1) + "!";
+                }).collect(Collectors.toList());
+
+        Map<String, String> body = new HashMap<>();
+        body.put("error", String.join(" ", errors));
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 }

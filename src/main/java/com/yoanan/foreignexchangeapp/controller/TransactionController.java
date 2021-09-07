@@ -3,11 +3,11 @@ package com.yoanan.foreignexchangeapp.controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.yoanan.foreignexchangeapp.model.binding.TransactionBindingModel;
 import com.yoanan.foreignexchangeapp.model.binding.TransactionListBindingModel;
-import com.yoanan.foreignexchangeapp.model.service.ProviderServiceModel;
 import com.yoanan.foreignexchangeapp.model.service.TransactionServiceModel;
 import com.yoanan.foreignexchangeapp.model.view.ProviderViewModel;
 import com.yoanan.foreignexchangeapp.model.view.TransactionViewModel;
 import com.yoanan.foreignexchangeapp.model.view.Views;
+import com.yoanan.foreignexchangeapp.service.ExchangeRateClientService;
 import com.yoanan.foreignexchangeapp.service.TransactionService;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.hibernate.validator.constraints.Length;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,32 +29,32 @@ import java.util.stream.Collectors;
 
 @RestController
 @Validated
-@RequestMapping("api")
+@RequestMapping("/api")
 public class TransactionController {
 
     private final TransactionService transactionService;
+    private final ExchangeRateClientService exchangeRateClientService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public TransactionController(TransactionService transactionService, ModelMapper modelMapper) {
+    public TransactionController(TransactionService transactionService, ExchangeRateClientService exchangeRateClientService, ModelMapper modelMapper) {
         this.transactionService = transactionService;
+        this.exchangeRateClientService = exchangeRateClientService;
         this.modelMapper = modelMapper;
     }
 
-    //TODO Validation
-    //TODO Exception Handling
     //TODO Unit Tests
     //TODO Logging mechanism for errors
     //TODO API Documentation
 
     // http://localhost:8080/api/exchange?base=EUR&quote=BGN
     @GetMapping("/exchange")
-    public ResponseEntity<ProviderViewModel> exchange(@RequestParam(value = "base") @NotBlank @Length(min = 3, max = 3, message = "Base currency must be 3 symbols!") String base,
-                                                      @RequestParam(value = "quote") @NotBlank @Length(min = 3, max = 3, message = "Quote currency must be 3 symbols!") String quote) {
+    public ResponseEntity<ProviderViewModel> exchange(@RequestParam(value = "base") @NotBlank @Length(min = 3, max = 3, message = "Base currency must be 3 symbols") String base,
+                                                      @RequestParam(value = "quote") @NotBlank @Length(min = 3, max = 3, message = "Quote currency must be 3 symbols") String quote) {
 
-        ProviderServiceModel providerServiceModel = transactionService.getExchangeRate(base, quote);
+        BigDecimal exchangeRate = exchangeRateClientService.getExchangeRate(base, quote);
 
-        ProviderViewModel toReturn = modelMapper.map(providerServiceModel, ProviderViewModel.class);
+        ProviderViewModel toReturn = new ProviderViewModel(exchangeRate);
 
         return new ResponseEntity<ProviderViewModel>(toReturn, HttpStatus.OK);
     }

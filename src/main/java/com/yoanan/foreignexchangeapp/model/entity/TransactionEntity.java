@@ -15,14 +15,14 @@ public class TransactionEntity {
     private LocalDate date;
     private String sourceCurrency;
     private String targetCurrency;
-    private Double exchangeRate;
+    private BigDecimal exchangeRate;
     private BigDecimal sourceAmount;
     private BigDecimal targetAmount;
 
     public TransactionEntity() {
     }
 
-    public TransactionEntity(String id, LocalDate date, String sourceCurrency, String targetCurrency, Double exchangeRate, BigDecimal sourceAmount, BigDecimal targetAmount) {
+    public TransactionEntity(String id, LocalDate date, String sourceCurrency, String targetCurrency, BigDecimal exchangeRate, BigDecimal sourceAmount, BigDecimal targetAmount) {
         this.id = id;
         this.date = date;
         this.sourceCurrency = sourceCurrency;
@@ -76,14 +76,17 @@ public class TransactionEntity {
     }
 
     @Column(name="exchange_rate", nullable = false)
-    public Double getExchangeRate() {
+    public BigDecimal getExchangeRate() {
         return exchangeRate;
     }
 
-    public TransactionEntity setExchangeRate(Double exchangeRate) {
+    public TransactionEntity setExchangeRate(BigDecimal exchangeRate) {
         this.exchangeRate = exchangeRate;
         return this;
     }
+
+
+
 
     @Column(name="source_amount", nullable = false)
     public BigDecimal getSourceAmount() {
