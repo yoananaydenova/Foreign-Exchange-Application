@@ -20,6 +20,12 @@ public class TransactionBindingModel {
     public TransactionBindingModel() {
     }
 
+    public TransactionBindingModel(BigDecimal sourceAmount, String sourceCurrency, String targetCurrency) {
+        this.sourceAmount = sourceAmount;
+        this.sourceCurrency = sourceCurrency;
+        this.targetCurrency = targetCurrency;
+    }
+
     @NotNull(message = "Source amount must be present!")
     @DecimalMin(value = "0", message = "Source amount must be greater than 0!")
     public BigDecimal getSourceAmount() {

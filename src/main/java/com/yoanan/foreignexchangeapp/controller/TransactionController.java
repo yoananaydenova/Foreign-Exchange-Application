@@ -78,8 +78,7 @@ public class TransactionController {
     // http://localhost:8080/api/transactions?page=1&size=4
     //        { "id" : ..........,
     //          "date" : .............}
-//    @Pattern(regexp="^(0|[1-9][0-9]*)$", message = "Page number must be greater than 0 and number type!")
-//    @Pattern(regexp="^(0|[1-9][0-9]*)$",message = "Size must be greater than 0 and number type!")
+
     @PostMapping("/transactions")
     public ResponseEntity<List<TransactionViewModel>> transactionsList(@RequestParam(value = "page", defaultValue = "1") String page,
                                                                        @RequestParam(value = "size", defaultValue = "3") String size,
@@ -94,7 +93,7 @@ public class TransactionController {
         }
 
         if (pageInt < 1) {
-            throw new IllegalArgumentException("Page number must be greater than 0!");
+            throw new IllegalArgumentException("Page number start from 1!");
         }
 
         if (sizeInt < 1) {

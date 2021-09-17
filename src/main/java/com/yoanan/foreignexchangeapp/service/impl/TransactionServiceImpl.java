@@ -1,12 +1,12 @@
 package com.yoanan.foreignexchangeapp.service.impl;
 
 
-import com.yoanan.foreignexchangeapp.repository.TransactionRepository;
-import com.yoanan.foreignexchangeapp.service.ExchangeRateClientService;
-import com.yoanan.foreignexchangeapp.service.TransactionService;
 import com.yoanan.foreignexchangeapp.model.binding.TransactionBindingModel;
 import com.yoanan.foreignexchangeapp.model.entity.TransactionEntity;
 import com.yoanan.foreignexchangeapp.model.service.TransactionServiceModel;
+import com.yoanan.foreignexchangeapp.repository.TransactionRepository;
+import com.yoanan.foreignexchangeapp.service.ExchangeRateClientService;
+import com.yoanan.foreignexchangeapp.service.TransactionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -22,9 +22,8 @@ import java.util.stream.Collectors;
 public class TransactionServiceImpl implements TransactionService {
 
 
-   private final TransactionRepository transactionRepository;
-   private final ExchangeRateClientService exchangeRateClientService;
-
+    private final TransactionRepository transactionRepository;
+    private final ExchangeRateClientService exchangeRateClientService;
     private final ModelMapper modelMapper;
 
     public TransactionServiceImpl(TransactionRepository transactionRepository, ExchangeRateClientService exchangeRateClientService, ModelMapper modelMapper) {
@@ -38,12 +37,10 @@ public class TransactionServiceImpl implements TransactionService {
 
         BigDecimal exchangeRate = exchangeRateClientService.getExchangeRate(transactionBindingModel.getSourceCurrency(), transactionBindingModel.getTargetCurrency());
 
-        BigDecimal targetAmount = transactionBindingModel.getSourceAmount().multiply(exchangeRate);
-
         TransactionEntity newTransaction = modelMapper.map(transactionBindingModel, TransactionEntity.class);
         newTransaction.setDate(LocalDate.now());
         newTransaction.setExchangeRate(exchangeRate);
-        newTransaction.setTargetAmount(targetAmount);
+        newTransaction.setTargetAmount(transactionBindingModel.getSourceAmount().multiply(exchangeRate));
 
         TransactionEntity transactionEntity = transactionRepository.saveAndFlush(newTransaction);
 
