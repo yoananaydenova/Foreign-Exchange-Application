@@ -23,7 +23,7 @@ public class TransactionViewModel {
 
 
     @JsonProperty("exchange_rate")
-    private Double exchangeRate;
+    private BigDecimal exchangeRate;
 
     @JsonProperty("source_amount")
     private BigDecimal sourceAmount;
@@ -38,7 +38,7 @@ public class TransactionViewModel {
 
 
 
-    public TransactionViewModel(String id, String date, String sourceCurrency, String targetCurrency, Double exchangeRate, BigDecimal sourceAmount, BigDecimal targetAmount) {
+    public TransactionViewModel(String id, String date, String sourceCurrency, String targetCurrency, BigDecimal exchangeRate, BigDecimal sourceAmount, BigDecimal targetAmount) {
         this.id = id;
         this.date = date;
         this.sourceCurrency = sourceCurrency;
@@ -84,11 +84,11 @@ public class TransactionViewModel {
         return this;
     }
 
-    public Double getExchangeRate() {
+    public BigDecimal getExchangeRate() {
         return exchangeRate;
     }
 
-    public TransactionViewModel setExchangeRate(Double exchangeRate) {
+    public TransactionViewModel setExchangeRate(BigDecimal exchangeRate) {
         this.exchangeRate = exchangeRate;
         return this;
     }

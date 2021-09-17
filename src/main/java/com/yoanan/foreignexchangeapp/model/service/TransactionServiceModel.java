@@ -10,14 +10,14 @@ public class TransactionServiceModel {
     private LocalDate date;
     private String sourceCurrency;
     private String targetCurrency;
-    private Double exchangeRate;
+    private BigDecimal exchangeRate;
     private BigDecimal sourceAmount;
     private BigDecimal targetAmount;
 
     public TransactionServiceModel() {
     }
 
-    public TransactionServiceModel(String id, LocalDate date, String sourceCurrency, String targetCurrency, Double exchangeRate, BigDecimal sourceAmount, BigDecimal targetAmount) {
+    public TransactionServiceModel(String id, LocalDate date, String sourceCurrency, String targetCurrency, BigDecimal exchangeRate, BigDecimal sourceAmount, BigDecimal targetAmount) {
         this.id = id;
         this.date = date;
         this.sourceCurrency = sourceCurrency;
@@ -63,11 +63,11 @@ public class TransactionServiceModel {
         return this;
     }
 
-    public Double getExchangeRate() {
+    public BigDecimal getExchangeRate() {
         return exchangeRate;
     }
 
-    public TransactionServiceModel setExchangeRate(Double exchangeRate) {
+    public TransactionServiceModel setExchangeRate(BigDecimal exchangeRate) {
         this.exchangeRate = exchangeRate;
         return this;
     }
