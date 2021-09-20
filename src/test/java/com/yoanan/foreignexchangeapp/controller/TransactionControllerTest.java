@@ -17,12 +17,9 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TransactionController.class)
 class TransactionControllerTest {
@@ -70,7 +67,7 @@ class TransactionControllerTest {
         TransactionServiceModel transactionServiceModel =
                 new TransactionServiceModel(id, date, sourceCurrency, targetCurrency, exchangeRate, sourceAmount, targetAmount);
         TransactionViewModel transactionViewModel =
-                new TransactionViewModel(id, date.toString(), sourceCurrency, targetCurrency, exchangeRate, sourceAmount,  targetAmount);
+                new TransactionViewModel(id, date.toString(), sourceCurrency, targetCurrency, exchangeRate, sourceAmount, targetAmount);
 
         when(transactionService.createTransaction(transactionBindingModel)).thenReturn(transactionServiceModel);
         when(modelMapper.map(org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any())).thenReturn(transactionViewModel);
@@ -89,15 +86,40 @@ class TransactionControllerTest {
     }
 
 
-        @Test
+    @Test
     public void transactionsList_whenResourcesAreRetrievedPagedWithIdAndDate_then200IsReceivedWithCorrectTransactionView() throws Exception {
-            mockMvc
-                    .perform(post("http://localhost:8080/api/transactions?page=1&size=4")
-                            .contentType("application/json")
-                            .content("{ \"source_amount\" : 10,\n" +
-                                    "    \"source_currency\" : \"EUR\",\n" +
-                                    "    \"target_currency\" : \"BGN\"}"))
-                    .andExpect(status().isOk());
+        String id = "a640692e-d557-408b-bf5d-0c4dd66a3fbb";
+        LocalDate date = LocalDate.now();
+        BigDecimal exchangeRate = new BigDecimal("1.952209");
+        BigDecimal targetAmount = new BigDecimal("19.52209");
+        BigDecimal sourceAmount = new BigDecimal("10");
+        String sourceCurrency = "EUR";
+        String targetCurrency = "BGN";
+
+        TransactionServiceModel transactionServiceModel =
+                new TransactionServiceModel(id, date, sourceCurrency, targetCurrency, exchangeRate, sourceAmount, targetAmount);
+
+        TransactionViewModel transactionViewModel =
+                new TransactionViewModel(id, date.toString(), sourceCurrency, targetCurrency, exchangeRate, sourceAmount, targetAmount);
+
+        when(transactionService.getTransactionByIdAndDate(id, date)).thenReturn(transactionServiceModel);
+        when(modelMapper.map(org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any())).thenReturn(transactionViewModel);
+
+        mockMvc
+                .perform(post("http://localhost:8080/api/transactions?page=1&size=4")
+                        .contentType("application/json")
+                        .content(" {" + "\"id\" : \"" + id + "\"," +
+                                "\"date\" : \"" + date.toString() + "\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].id").value(id))
+                // .andExpect(jsonPath("$[0].date").value(date))
+                .andExpect(jsonPath("$[0].date".toString()).value(date.toString()))
+                .andExpect(jsonPath("$[0].source_currency").value(sourceCurrency))
+                .andExpect(jsonPath("$[0].target_currency").value(targetCurrency))
+                .andExpect(jsonPath("$[0].exchange_rate").value(exchangeRate))
+                .andExpect(jsonPath("$[0].source_amount").value(sourceAmount))
+                .andExpect(jsonPath("$[0].target_amount").value(targetAmount));
     }
 //    @Test
 //    public void transactionsList_whenPageOfResourcesAreRetrievedOutOfBounds_then404IsReceived(){
