@@ -65,6 +65,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(value = {ExchangeRateClientFailureException.class})
+    public ResponseEntity<Object> handleExchangeRateClientFailureException(Exception ex, WebRequest request) {
+
+        String errorMessageDescription = "Invalid base and/or quote name of currency!";
+
+        ErrorMessage errorMessage = new ErrorMessage(errorMessageDescription);
+
+        return new ResponseEntity<>(
+                errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(value = {IllegalArgumentException.class})
     public ResponseEntity<Object> handleSpecificExceptions(Exception ex, WebRequest request) {
 

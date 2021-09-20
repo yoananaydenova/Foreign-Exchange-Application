@@ -109,7 +109,6 @@ public class TransactionController {
         }
 
 
-        System.out.println();
         List<TransactionViewModel> result = new ArrayList<>();
 
         // have ID and DATE -> ONE transaction

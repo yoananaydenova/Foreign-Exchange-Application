@@ -1,48 +1,116 @@
 package com.yoanan.foreignexchangeapp.controller;
 
+import com.yoanan.foreignexchangeapp.model.binding.TransactionBindingModel;
+import com.yoanan.foreignexchangeapp.model.service.TransactionServiceModel;
+import com.yoanan.foreignexchangeapp.model.view.TransactionViewModel;
+import com.yoanan.foreignexchangeapp.service.ExchangeRateClientService;
 import com.yoanan.foreignexchangeapp.service.TransactionService;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TransactionController.class)
-@ExtendWith(SpringExtension.class)
 class TransactionControllerTest {
+
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private TransactionService transactionServiceMock;
+    private TransactionService transactionService;
 
-    @Test
-    void contextLoads() throws Exception {
-        mockMvc.perform(
-                MockMvcRequestBuilders.get("/api")
-                        .accept(MediaType.APPLICATION_JSON)
-        ).andReturn();
-    }
+    @MockBean
+    private ExchangeRateClientService exchangeRateClientService;
+
+    @MockBean
+    private ModelMapper modelMapper;
 
 
     @Test
-    void exchange() {
+    void exchange_whenResourcesAreRetrievedCorrect_then200IsReceivedWithCorrectExchangeRate() throws Exception {
+
+        when(exchangeRateClientService.getExchangeRate("BGN", "EUR")).thenReturn(new BigDecimal("1.956671"));
+
+        mockMvc
+                .perform(get("http://localhost:8080/api/exchange?base=BGN&quote=EUR")
+                        .contentType("application/json"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(jsonPath("$.exchange_rate").value(1.956671));
     }
 
     @Test
-    void transaction() {
+    void transaction_whenResourcesAreRetrievedCorrect_then200IsReceivedWithCorrectTransactionView() throws Exception {
+        BigDecimal sourceAmount = new BigDecimal("10");
+        String sourceCurrency = "EUR";
+        String targetCurrency = "BGN";
+
+
+        String id = "a640692e-d557-408b-bf5d-0c4dd66a3fbb";
+        LocalDate date = LocalDate.now();
+        BigDecimal exchangeRate = new BigDecimal("1.952209");
+        BigDecimal targetAmount = new BigDecimal("19.52209");
+
+        TransactionBindingModel transactionBindingModel = new TransactionBindingModel(sourceAmount, sourceCurrency, targetCurrency);
+        TransactionServiceModel transactionServiceModel =
+                new TransactionServiceModel(id, date, sourceCurrency, targetCurrency, exchangeRate, sourceAmount, targetAmount);
+        TransactionViewModel transactionViewModel =
+                new TransactionViewModel(id, date.toString(), sourceCurrency, targetCurrency, exchangeRate, sourceAmount,  targetAmount);
+
+        when(transactionService.createTransaction(transactionBindingModel)).thenReturn(transactionServiceModel);
+        when(modelMapper.map(org.mockito.ArgumentMatchers.any(), org.mockito.ArgumentMatchers.any())).thenReturn(transactionViewModel);
+
+
+        mockMvc
+                .perform(post("http://localhost:8080/api/transaction")
+                        .contentType("application/json")
+                        .content("{ \"source_amount\" : 10,\n" +
+                                "    \"source_currency\" : \"EUR\",\n" +
+                                "    \"target_currency\" : \"BGN\"}"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value("a640692e-d557-408b-bf5d-0c4dd66a3fbb"))
+                .andExpect(jsonPath("$.target_amount").value(19.52209));
     }
 
-    @Test
-    void transactionsList() {
+
+        @Test
+    public void transactionsList_whenResourcesAreRetrievedPagedWithIdAndDate_then200IsReceivedWithCorrectTransactionView() throws Exception {
+            mockMvc
+                    .perform(post("http://localhost:8080/api/transactions?page=1&size=4")
+                            .contentType("application/json")
+                            .content("{ \"source_amount\" : 10,\n" +
+                                    "    \"source_currency\" : \"EUR\",\n" +
+                                    "    \"target_currency\" : \"BGN\"}"))
+                    .andExpect(status().isOk());
     }
+//    @Test
+//    public void transactionsList_whenPageOfResourcesAreRetrievedOutOfBounds_then404IsReceived(){
+//        String url = getFooURL() + "?page=" + randomNumeric(5) + "&size=2";
+//        Response response = RestAssured.get.get(url);
+//
+//        assertThat(response.getStatusCode(), is(404));
+//    }
+//    @Test
+//    public void transactionsList_givenResourcesExist_whenFirstPageIsRetrieved_thenPageContainsResources(){
+//        createResource();
+//        Response response = RestAssured.get(paths.getFooURL() + "?page=0&size=2");
+//
+//        assertFalse(response.body().as(List.class).isEmpty());
+//    }
 }

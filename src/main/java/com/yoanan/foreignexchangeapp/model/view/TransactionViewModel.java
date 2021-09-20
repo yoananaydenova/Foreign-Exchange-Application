@@ -35,9 +35,6 @@ public class TransactionViewModel {
     public TransactionViewModel() {
     }
 
-
-
-
     public TransactionViewModel(String id, String date, String sourceCurrency, String targetCurrency, BigDecimal exchangeRate, BigDecimal sourceAmount, BigDecimal targetAmount) {
         this.id = id;
         this.date = date;

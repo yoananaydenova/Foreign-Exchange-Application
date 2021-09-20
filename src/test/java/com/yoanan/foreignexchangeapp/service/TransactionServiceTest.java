@@ -5,7 +5,6 @@ import com.yoanan.foreignexchangeapp.model.entity.TransactionEntity;
 import com.yoanan.foreignexchangeapp.model.service.TransactionServiceModel;
 import com.yoanan.foreignexchangeapp.repository.TransactionRepository;
 import com.yoanan.foreignexchangeapp.service.impl.TransactionServiceImpl;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -50,28 +49,6 @@ class TransactionServiceTest {
         transactionService = new TransactionServiceImpl(transactionRepository, exchangeRateClientService, modelMapper);
     }
 
-//    @Test
-//    void getExchangeRate_whenBaseAndQuoteAreCorrect_shouldReturnExchangeRate() {
-//        String base = "EUR";
-//        String quote = "BGN";
-
-//        String json = "{\n" +
-//                "    \"success\": true,\n" +
-//                "    \"timestamp\": 1630955583,\n" +
-//                "    \"base\": \"EUR\",\n" +
-//                "    \"date\": \"2021-09-06\",\n" +
-//                "    \"rates\": {\n" +
-//                "        \"EUR\": 1\n" +
-//                "    }\n" +
-//                "}";
-
-//        mockWebServer.enqueue(
-//                new MockResponse()
-//                        .setResponseCode(200)
-//                        .setHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-//                        .setBody(json)
-//        );
-    //   }
 
     @Test
     void createTransaction_validTransactionData_shouldReturnCorrectTransactionServiceModel() {
@@ -153,11 +130,11 @@ class TransactionServiceTest {
         Pageable pageable = PageRequest.of(page - 1, size);
 
         TransactionEntity firstTransaction = new TransactionEntity("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee1", transactionDate,
-                        "EUR", "BRL", BigDecimal.valueOf(1.5),BigDecimal.valueOf(1), BigDecimal.valueOf(1.5));
+                "EUR", "BRL", BigDecimal.valueOf(1.5), BigDecimal.valueOf(1), BigDecimal.valueOf(1.5));
         TransactionEntity secondTransaction = new TransactionEntity("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee2", transactionDate,
-                "EUR", "CAD", BigDecimal.valueOf(2.0),BigDecimal.valueOf(5.5), BigDecimal.valueOf(10.0));
+                "EUR", "CAD", BigDecimal.valueOf(2.0), BigDecimal.valueOf(5.5), BigDecimal.valueOf(10.0));
         TransactionEntity thirdTransaction = new TransactionEntity("aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeee3", transactionDate,
-                "EUR", "BGN", BigDecimal.valueOf(1.9),BigDecimal.valueOf(3.0), BigDecimal.valueOf(5.7));
+                "EUR", "BGN", BigDecimal.valueOf(1.9), BigDecimal.valueOf(3.0), BigDecimal.valueOf(5.7));
         List<TransactionEntity> transactionsFromDB = new ArrayList<>(List.of(firstTransaction, secondTransaction, thirdTransaction));
 
         Page<TransactionEntity> pagedResponse = new PageImpl(transactionsFromDB);
