@@ -43,9 +43,7 @@ public class TransactionController {
         this.modelMapper = modelMapper;
     }
 
-    //TODO Unit Tests
-    //TODO Logging mechanism for errors
-    //TODO API Documentation
+    //TODO Using Money and Currency API
 
     // http://localhost:8080/api/exchange?base=EUR&quote=BGN
     @GetMapping("/exchange")
@@ -127,7 +125,7 @@ public class TransactionController {
 
 
         // have only DATE -> LIST with transactions
-        if (transactionId == null && transactionDate != null) {
+        if (transactionDate != null && transactionId == null) {
 
             Page<TransactionServiceModel> transactionsByDate = transactionService.getTransactionsByDate(transactionDate, pageInt, sizeInt);
 

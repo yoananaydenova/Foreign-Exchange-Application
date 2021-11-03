@@ -65,29 +65,33 @@
             <version>4.9.1</version>
             <scope>test</scope>
         </dependency>
+<!--       Aspect starter-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
 <!--        model mapper-->
         <dependency>
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
             <version>2.3.0</version>
         </dependency>
+<!--        Currency and Money API-->
+        <dependency>
+            <groupId>org.javamoney</groupId>
+            <artifactId>moneta</artifactId>
+            <version>1.4.2</version>
+        </dependency>
 <!--        webflux-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webflux</artifactId>
         </dependency>
-        <!--        for spring rest documentation-->
+<!--        documentation-->
         <dependency>
-            <groupId>org.springframework.restdocs</groupId>
-            <artifactId>spring-restdocs-mockmvc</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!--        for automation documentation-->
-        <dependency>
-            <groupId>capital.scalable</groupId>
-            <artifactId>spring-auto-restdocs-core</artifactId>
-            <version>2.0.11</version>
-            <scope>test</scope>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.5.2</version>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
@@ -95,6 +99,7 @@
             <version>3.3.0</version>
             <type>maven-plugin</type>
         </dependency>
+
     </dependencies>
 
     <build>
