@@ -23,7 +23,7 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
 
     // handle validation errors
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+    public ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers,
             HttpStatus status, WebRequest request) {
         List<String> errors = ex.getBindingResult()
