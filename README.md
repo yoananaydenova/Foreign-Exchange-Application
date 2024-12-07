@@ -5,8 +5,8 @@ For quick setup and presentational convenience is used in memory DB - H2. and fo
 The application has central error logging mechanism, unit tests and API Documentation.
 In the case of an error, a specific code to the error and a meaningful message is provided to client. 
 
-The application use http://fixer.io/ as a service provider to retrieve exchange rates with limitations of service provider free services (e.g. no
-real time rates, only one base currency support etc.).
+The application use https://app.exchangerate-api.com as a service provider to retrieve exchange rates with limitations of service provider free services (e.g. no
+real time rates).
    
 
 Functional requirements:
@@ -24,10 +24,10 @@ Functional requirements:
 Useful links about documentation API:
 
  - Access the API documentation at:
- 	http://localhost:8080/api-docs/
+   http://localhost:8080/api-docs
 
  - Access the API documentation with Swagger UI at:
-	http://localhost:8080/swagger-ui.html
+   http://localhost:8080/swagger-ui.html
 	
  - Access the custom H2 Console URL at:
- 	http://localhost:8080/h2
+   http://localhost:8080/h2
