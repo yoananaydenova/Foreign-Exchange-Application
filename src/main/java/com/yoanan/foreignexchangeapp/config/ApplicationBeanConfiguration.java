@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 public class ApplicationBeanConfiguration {
 
-    private static final String BASE_URL = "http://data.fixer.io/api";
+    private static final String BASE_URL = "https://v6.exchangerate-api.com/v6";
 
     @Bean
     public ModelMapper modelMapper() {
