@@ -1,9 +1,9 @@
 package com.yoanan.foreignexchangeapp.model.binding;
 
+import jakarta.validation.constraints.PastOrPresent;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.PastOrPresent;
 import java.time.LocalDate;
 
 public class TransactionListBindingModel {

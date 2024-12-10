@@ -1,10 +1,10 @@
 package com.yoanan.foreignexchangeapp.model.binding;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class TransactionBindingModel {

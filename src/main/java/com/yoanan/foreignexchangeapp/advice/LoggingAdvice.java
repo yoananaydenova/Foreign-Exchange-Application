@@ -3,6 +3,7 @@ package com.yoanan.foreignexchangeapp.advice;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.yoanan.foreignexchangeapp.controller.TransactionController;
 import com.yoanan.foreignexchangeapp.service.LogService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.stream.Collectors;

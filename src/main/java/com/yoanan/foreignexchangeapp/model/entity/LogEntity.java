@@ -1,8 +1,8 @@
 package com.yoanan.foreignexchangeapp.model.entity;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity

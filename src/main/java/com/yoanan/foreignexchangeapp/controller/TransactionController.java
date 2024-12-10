@@ -9,6 +9,8 @@ import com.yoanan.foreignexchangeapp.model.view.TransactionViewModel;
 import com.yoanan.foreignexchangeapp.model.view.Views;
 import com.yoanan.foreignexchangeapp.service.ExchangeRateClientService;
 import com.yoanan.foreignexchangeapp.service.TransactionService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.hibernate.validator.constraints.Length;
 import org.modelmapper.ModelMapper;
@@ -19,8 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -78,7 +78,7 @@ public class TransactionController {
     //          "date" : .............}
 
     @PostMapping("/transactions")
-    public ResponseEntity<List<TransactionViewModel>> transactionsList(@RequestParam(value = "page", defaultValue = "1") String page,
+    public ResponseEntity<List<TransactionViewModel>> transactionList(@RequestParam(value = "page", defaultValue = "1") String page,
                                                                        @RequestParam(value = "size", defaultValue = "3") String size,
                                                                        @Valid @RequestBody TransactionListBindingModel transactionListBindingModel) {
         int pageInt;

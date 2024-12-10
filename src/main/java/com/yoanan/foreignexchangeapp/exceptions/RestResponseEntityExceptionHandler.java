@@ -1,6 +1,7 @@
 package com.yoanan.foreignexchangeapp.exceptions;
 
 import com.yoanan.foreignexchangeapp.model.view.ErrorMessage;
+import jakarta.validation.ConstraintViolationException;
 import org.apache.velocity.exception.ResourceNotFoundException;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpHeaders;
@@ -12,7 +13,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.validation.ConstraintViolationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,10 +70,16 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
         String errorMessageDescription = "Invalid base and/or quote name of currency!";
 
-        ErrorMessage errorMessage = new ErrorMessage(errorMessageDescription);
+        ErrorMessage errorMessage = new ErrorMessage(ex.getMessage());
 
         return new ResponseEntity<>(
                 errorMessage, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidCurrencyException.class)
+    public ResponseEntity<Object> handleInvalidCurrency(InvalidCurrencyException ex) {
+        return new ResponseEntity<>(
+                ex.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
