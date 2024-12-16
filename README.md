@@ -31,3 +31,6 @@ Useful links about documentation API:
 	
  - Access the custom H2 Console URL at:
    http://localhost:8080/h2
+
+- Access API version at:
+   http://localhost:8080/about
