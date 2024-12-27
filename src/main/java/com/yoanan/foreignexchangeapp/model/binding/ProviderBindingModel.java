@@ -1,88 +1,112 @@
 package com.yoanan.foreignexchangeapp.model.binding;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.Map;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ProviderBindingModel {
 
-    @JsonProperty("success")
-    private boolean state;
-    private Timestamp timestamp;
-    @JsonProperty("base")
-    private String baseCurrency;
-    private LocalDate date;
-    private Map<String, BigDecimal> rates = new HashMap<>();
+    private String result;
 
-    private Map<String, String> error = new HashMap<>();
+    @JsonProperty("error-type")
+    private String errorType;
+
+    @JsonProperty("base_code")
+    private String baseCode;
+
+    @JsonProperty("conversion_rates")
+    private Map<String, BigDecimal> conversionRates;
+
+    private String documentation;
+
+    @JsonProperty("terms-of-use")
+    private String termsOfUse;
+
+    @JsonProperty("time_last_update_unix")
+    private Long lastUpdateUnix;
+
+    @JsonProperty("time_next_update_unix")
+    private Long nextUpdateUnix;
 
     public ProviderBindingModel() {
     }
 
-    public ProviderBindingModel(boolean state, Timestamp timestamp, String baseCurrency, LocalDate date, Map<String, BigDecimal> rates, Map<String, String> error) {
-        this.state = state;
-        this.timestamp = timestamp;
-        this.baseCurrency = baseCurrency;
-        this.date = date;
-        this.rates = rates;
-        this.error = error;
+    public ProviderBindingModel(String result, String errorType) {
+        this.result = result;
+        this.errorType = errorType;
     }
 
-    public boolean isState() {
-        return state;
+    public String getResult() {
+        return result;
     }
 
-    public ProviderBindingModel setState(boolean state) {
-        this.state = state;
-        return this;
+    public void setResult(String result) {
+        this.result = result;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public String getErrorType() {
+        return errorType;
     }
 
-    public ProviderBindingModel setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
-        return this;
+    public void setErrorType(String errorType) {
+        this.errorType = errorType;
     }
 
-    public String getBaseCurrency() {
-        return baseCurrency;
+    public String getBaseCode() {
+        return baseCode;
     }
 
-    public ProviderBindingModel setBaseCurrency(String baseCurrency) {
-        this.baseCurrency = baseCurrency;
-        return this;
+    public void setBaseCode(String baseCode) {
+        this.baseCode = baseCode;
     }
 
-    public LocalDate getDate() {
-        return date;
+    public Map<String, BigDecimal> getConversionRates() {
+        return conversionRates != null ? conversionRates : Map.of();
     }
 
-    public ProviderBindingModel setDate(LocalDate date) {
-        this.date = date;
-        return this;
+    public void setConversionRates(Map<String, BigDecimal> conversionRates) {
+        this.conversionRates = conversionRates;
     }
 
-    public Map<String, BigDecimal> getRates() {
-        return rates;
+    public boolean isSuccess() {
+        return "success".equals(result);
     }
 
-    public ProviderBindingModel setRates(Map<String, BigDecimal> rates) {
-        this.rates = rates;
-        return this;
+    public String getDocumentation() {
+        return documentation;
     }
 
-    public Map<String, String> getError() {
-        return error;
+    public void setDocumentation(String documentation) {
+        this.documentation = documentation;
     }
 
-    public ProviderBindingModel setError(Map<String, String> error) {
-        this.error = error;
-        return this;
+    public String getTermsOfUse() {
+        return termsOfUse;
     }
+
+    public void setTermsOfUse(String termsOfUse) {
+        this.termsOfUse = termsOfUse;
+    }
+
+    public Long getLastUpdateUnix() {
+        return lastUpdateUnix;
+    }
+
+    public void setLastUpdateUnix(Long lastUpdateUnix) {
+        this.lastUpdateUnix = lastUpdateUnix;
+    }
+
+    public Long getNextUpdateUnix() {
+        return nextUpdateUnix;
+    }
+
+    public void setNextUpdateUnix(Long nextUpdateUnix) {
+        this.nextUpdateUnix = nextUpdateUnix;
+    }
+
 }
