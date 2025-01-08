@@ -1,6 +1,7 @@
 package com.yoanan.foreignexchangeapp.service;
 
 import com.yoanan.foreignexchangeapp.exceptions.ExchangeRateClientFailureException;
+import com.yoanan.foreignexchangeapp.exceptions.InvalidCurrencyException;
 import com.yoanan.foreignexchangeapp.service.impl.ExchangeRateClientServiceImpl;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -12,6 +13,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import javax.money.Monetary;
+import javax.money.UnknownCurrencyException;
 import java.io.IOException;
 import java.math.BigDecimal;
 
@@ -39,13 +42,21 @@ class ExchangeRateClientServiceTest {
 
     @Test
     void getExchangeRate_whenBaseAndQuoteAreCorrect_shouldReturnCorrectExchangeRate() {
-        String json = "{ \"success\": true,\n" +
-                "    \"timestamp\": 1631971443,\n" +
-                "    \"base\": \"EUR\",\n" +
-                "    \"date\": \"2021-09-18\",\n" +
-                "    \"rates\": {\n" +
-                "        \"USD\": 1.17259\n" +
-                "    }}";
+        String json = """
+                {
+                    "result": "success",
+                    "documentation": "https://www.exchangerate-api.com/docs",
+                    "terms_of_use": "https://www.exchangerate-api.com/terms",
+                    "time_last_update_unix": 1753401601,
+                    "time_last_update_utc": "Fri, 25 Jul 2025 00:00:01 +0000",
+                    "time_next_update_unix": 1753488001,
+                    "time_next_update_utc": "Sat, 26 Jul 2025 00:00:01 +0000",
+                    "base_code": "EUR",
+                    "conversion_rates": {
+                        "EUR": 1,
+                        "USD": 1.17259,
+                        "AFN": 80.9840,
+                        "ALL": 97.5553}}""";
 
         mockWebServer.enqueue(
                 new MockResponse().setResponseCode(200)
@@ -63,13 +74,21 @@ class ExchangeRateClientServiceTest {
 
     @Test
     void getExchangeRate_whenBaseAndQuoteAreCorrect_shouldMakeTheCorrectRequest() throws InterruptedException {
-        String json = "{ \"success\": true,\n" +
-                "    \"timestamp\": 1631971443,\n" +
-                "    \"base\": \"EUR\",\n" +
-                "    \"date\": \"2021-09-18\",\n" +
-                "    \"rates\": {\n" +
-                "        \"USD\": 1.17259\n" +
-                "    }}";
+        String json = """
+                {
+                    "result": "success",
+                    "documentation": "https://www.exchangerate-api.com/docs",
+                    "terms_of_use": "https://www.exchangerate-api.com/terms",
+                    "time_last_update_unix": 1753401601,
+                    "time_last_update_utc": "Fri, 25 Jul 2025 00:00:01 +0000",
+                    "time_next_update_unix": 1753488001,
+                    "time_next_update_utc": "Sat, 26 Jul 2025 00:00:01 +0000",
+                    "base_code": "EUR",
+                    "conversion_rates": {
+                        "EUR": 1,
+                        "USD": 1.17259,
+                        "AFN": 80.9840,
+                        "ALL": 97.5553}}""";
 
         mockWebServer.enqueue(
                 new MockResponse().setResponseCode(200)
@@ -85,9 +104,28 @@ class ExchangeRateClientServiceTest {
         RecordedRequest request = mockWebServer.takeRequest();
 
         assertThat(request.getMethod()).isEqualTo("GET");
-        assertThat(request.getPath()).isEqualTo("/api/latest?access_key=null&base=EUR&symbols=USD");
+        assertThat(request.getPath()).isEqualTo("/api//latest/EUR");
     }
 
+    @Test
+    public void givenCurrencyCode_whenBaseCurrencyNoExist_thanThrowsException() {
+        String bgn = "AAA";
+        String eur = "EUR";
+
+        assertThrows(UnknownCurrencyException.class, () ->
+                exchangeRateClientService.getExchangeRate(bgn, eur)
+        );
+    }
+
+    @Test
+    public void givenCurrencyCode_whenTargetCurrencyNoExist_thanThrowsException() {
+        String bgn = "EUR";
+        String eur = "BBB";
+
+        assertThrows(UnknownCurrencyException.class, () ->
+                exchangeRateClientService.getExchangeRate(bgn, eur)
+        );
+    }
 
     @Test
     void getExchangeRate_exchangeError() {
@@ -106,7 +144,7 @@ class ExchangeRateClientServiceTest {
         String bgn = "BGN";
         String eur = "EUR";
 
-        assertThrows(ExchangeRateClientFailureException.class, () ->
+        assertThrows(InvalidCurrencyException.class, () ->
                 exchangeRateClientService.getExchangeRate(bgn, eur)
         );
 
