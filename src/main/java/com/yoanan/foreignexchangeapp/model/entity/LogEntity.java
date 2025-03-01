@@ -80,7 +80,7 @@ public class LogEntity {
         return this;
     }
 
-    @Column(name="exeption_message")
+    @Column(name="exception_message")
     public String getExceptionMessage() {
         return exceptionMessage;
     }
