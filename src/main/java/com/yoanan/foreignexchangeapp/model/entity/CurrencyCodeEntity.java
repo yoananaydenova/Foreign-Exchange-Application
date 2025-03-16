@@ -7,16 +7,16 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="codes")
-public class CurrencyEntity {
+public class CurrencyCodeEntity {
 
     private String code;
     private String name;
 
 
-    public CurrencyEntity() {
+    public CurrencyCodeEntity() {
     }
 
-    public CurrencyEntity(String code, String name) {
+    public CurrencyCodeEntity(String code, String name) {
         this.code = code;
         this.name = name;
     }
