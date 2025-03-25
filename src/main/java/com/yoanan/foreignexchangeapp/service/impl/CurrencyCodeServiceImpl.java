@@ -32,6 +32,8 @@ public class CurrencyCodeServiceImpl implements CurrencyCodeService {
     }
 
     @Override
+    @Scheduled(cron = "0 0 1 * * *") // 1-st day of the month at 00:00
+    @PostConstruct
     public void importCurrencyCodes() {
         try {
             ProviderCodeBindingModel response = webClient.get()
