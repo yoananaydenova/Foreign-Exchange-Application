@@ -31,7 +31,7 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    @Scheduled(cron = "${log-info.clear-cron}")
+    @Scheduled(cron = "${log-info.clear-cron}") // At 12:02 PM, on day 1 of the month, every 6 months
     public void clearAllLogs() {
         LOGGER.info("Clear all logs info...");
         logRepository.deleteAll();
