@@ -86,9 +86,6 @@ public class TransactionEntity {
         return this;
     }
 
-
-
-
     @Column(name="source_amount", nullable = false)
     public BigDecimal getSourceAmount() {
         return sourceAmount;

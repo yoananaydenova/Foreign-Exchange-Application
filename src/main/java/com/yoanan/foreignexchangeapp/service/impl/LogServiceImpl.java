@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 public class LogServiceImpl implements LogService {
 
     private final LogRepository logRepository;
+    // TODO refactor LogService to be universal
     private Logger LOGGER = LoggerFactory.getLogger(TransactionController.class);
 
     public LogServiceImpl(LogRepository logRepository) {

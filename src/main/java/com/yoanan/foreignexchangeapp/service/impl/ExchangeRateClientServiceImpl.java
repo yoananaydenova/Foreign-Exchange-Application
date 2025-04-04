@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import javax.money.CurrencyUnit;
+import javax.money.Monetary;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.Set;
@@ -32,6 +34,10 @@ public class ExchangeRateClientServiceImpl implements ExchangeRateClientService 
 
     @Override
     public BigDecimal getExchangeRate(String baseCurrency, String targetCurrency) {
+
+        // TODO use these
+        CurrencyUnit base = Monetary.getCurrency(baseCurrency);
+        CurrencyUnit target = Monetary.getCurrency(targetCurrency);
 
         validateCurrencies(baseCurrency, targetCurrency);
 
