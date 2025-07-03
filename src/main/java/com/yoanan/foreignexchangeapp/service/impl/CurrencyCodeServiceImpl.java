@@ -2,10 +2,12 @@ package com.yoanan.foreignexchangeapp.service.impl;
 
 import com.yoanan.foreignexchangeapp.model.binding.ProviderCodeBindingModel;
 import com.yoanan.foreignexchangeapp.model.entity.CurrencyCodeEntity;
+import com.yoanan.foreignexchangeapp.model.entity.LogLevel;
 import com.yoanan.foreignexchangeapp.repository.CurrencyCodeRepository;
 import com.yoanan.foreignexchangeapp.service.CurrencyCodeService;
 import com.yoanan.foreignexchangeapp.service.LogService;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,6 @@ public class CurrencyCodeServiceImpl implements CurrencyCodeService {
     @Value("${provider.access-key}")
     private String apiKey;
 
-
     public CurrencyCodeServiceImpl(CurrencyCodeRepository codeRepository, WebClient webClient, LogService logService) {
         this.currencyCodeRepository = codeRepository;
         this.webClient = webClient;
@@ -37,33 +38,14 @@ public class CurrencyCodeServiceImpl implements CurrencyCodeService {
 
     @Scheduled(cron = "${currency-codes.sync-cron}") // 1-st day of the month at 00:00
     public void scheduledCurrencyCodesImport() {
-        logService.createLog(
-                "Scheduled Job",
-                "scheduledCurrencyCodesImport",
-                this.getClass().getSimpleName(),
-                "Starting currency code sync job"
-        );
-        try {
-            importCurrencyCodes();
-        } finally {
-            logService.createLog(
-                    "Scheduled Job",
-                    "scheduledImport",
-                    this.getClass().getSimpleName(),
-                    "Completed currency code sync job"
-            );
-        }
+        importCurrencyCodes(null);
     }
 
     @Override
     @PostConstruct
-    public void importCurrencyCodes() {
-        String methodName = new Object() {}
-                .getClass()
-                .getEnclosingMethod()
-                .getName();
-
-        String className = this.getClass().getSimpleName();
+    public void importCurrencyCodes(HttpServletRequest request) {
+        String action = "CURRENCY_CODE_SYNC";
+        String source = this.getClass().getSimpleName();
         String requestUrl = "https://v6.exchangerate-api.com/v6/{apiKey}/codes";
 
         try {
@@ -88,11 +70,11 @@ public class CurrencyCodeServiceImpl implements CurrencyCodeService {
                         Successfully synced %d currencies""".formatted(currencies.size());
 
                 LOGGER.info(successMessage);
-                logService.createLog(
-                        requestUrl,
-                        methodName,
-                        className,
-                        successMessage
+                logService.logToDatabase(
+                        action,
+                        successMessage,
+                        LogLevel.INFO,
+                        CurrencyCodeServiceImpl.class
                 );
             }
         } catch (Exception e) {
@@ -102,11 +84,11 @@ public class CurrencyCodeServiceImpl implements CurrencyCodeService {
 
             LOGGER.error(errorMessage, e);
 
-            logService.createLog(
-                    requestUrl,
-                    methodName,
-                    className,
-                    errorMessage
+            logService.logToDatabase(
+                    action,
+                    errorMessage,
+                    LogLevel.ERROR,
+                    CurrencyCodeServiceImpl.class
             );
         }
     }
